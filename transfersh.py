@@ -18,7 +18,7 @@ import wx.richtext
 class MainFrame ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Transfer.sh", pos = wx.DefaultPosition, size = wx.Size( 415,413 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Transfer.sh", pos = wx.DefaultPosition, size = wx.Size( 432,490 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
@@ -68,41 +68,77 @@ class MainFrame ( wx.Frame ):
 
 		uploadSizer.Add( optionDownloadSizer, 0, wx.EXPAND|wx.ALL, 5 )
 
-		actionSizer = wx.BoxSizer( wx.HORIZONTAL )
+		actionUploadSizer = wx.BoxSizer( wx.HORIZONTAL )
 
-		actionSizer.SetMinSize( wx.Size( -1,1 ) )
+		actionUploadSizer.SetMinSize( wx.Size( -1,1 ) )
+		self.labelChooseFile = wx.StaticText( self.mainPanel, wx.ID_ANY, u"Choose File", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.labelChooseFile.Wrap( -1 )
 
-		actionSizer.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+		actionUploadSizer.Add( self.labelChooseFile, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.filePicker = wx.FilePickerCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, u"Pilih file", u"*.*", wx.DefaultPosition, wx.Size( 220,-1 ), wx.FLP_DEFAULT_STYLE|wx.FLP_FILE_MUST_EXIST )
-		actionSizer.Add( self.filePicker, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.filePicker = wx.FilePickerCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, u"Pilih file", u"*.*", wx.DefaultPosition, wx.Size( 150,-1 ), wx.FLP_FILE_MUST_EXIST )
+		self.filePicker.SetHelpText( u"Browse your file" )
 
-		self.btnUpload = wx.Button( self.mainPanel, wx.ID_ANY, u"UPLOAD", wx.DefaultPosition, wx.DefaultSize, wx.BU_LEFT )
+		actionUploadSizer.Add( self.filePicker, 0, wx.ALL|wx.EXPAND, 5 )
+
+		self.btnUpload = wx.Button( self.mainPanel, wx.ID_ANY, u"UPLOAD", wx.DefaultPosition, wx.DefaultSize, wx.BU_LEFT|wx.BU_NOTEXT )
 
 		self.btnUpload.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_UP, wx.ART_TOOLBAR ) )
-		self.btnUpload.SetBitmapMargins( wx.Size( 20,1 ) )
+		self.btnUpload.SetBitmapMargins( wx.Size( 15,1 ) )
 		self.btnUpload.SetFont( wx.Font( 10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, True, "Arial Black" ) )
 		self.btnUpload.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BTNTEXT ) )
 		self.btnUpload.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_MENU ) )
 		self.btnUpload.SetToolTip( u"Upload file" )
-		self.btnUpload.SetHelpText( u"Upload file" )
+		self.btnUpload.SetHelpText( u"Upload now" )
 
-		actionSizer.Add( self.btnUpload, 0, wx.ALL, 5 )
-
-
-		actionSizer.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+		actionUploadSizer.Add( self.btnUpload, 1, wx.ALL, 5 )
 
 
-		uploadSizer.Add( actionSizer, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 1 )
+		uploadSizer.Add( actionUploadSizer, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 1 )
 
-		self.resultBox = wx.richtext.RichTextCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
-		uploadSizer.Add( self.resultBox, 1, wx.EXPAND |wx.ALL, 5 )
+		actionDeleteSizer = wx.BoxSizer( wx.HORIZONTAL )
+
+		self.labelDeleteUrl = wx.StaticText( self.mainPanel, wx.ID_ANY, u"URL Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.labelDeleteUrl.Wrap( -1 )
+
+		actionDeleteSizer.Add( self.labelDeleteUrl, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.deleteUrl = wx.TextCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_AUTO_URL )
+		self.deleteUrl.SetHelpText( u"Your delete url" )
+
+		actionDeleteSizer.Add( self.deleteUrl, 1, wx.ALL|wx.EXPAND, 5 )
+
+		self.btnDelete = wx.Button( self.mainPanel, wx.ID_ANY, u"DELETE", wx.DefaultPosition, wx.DefaultSize, wx.BU_NOTEXT )
+
+		self.btnDelete.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_DELETE, wx.ART_BUTTON ) )
+		self.btnDelete.SetBitmapMargins( wx.Size( 15,-1 ) )
+		self.btnDelete.SetHelpText( u"Delete File From URL" )
+
+		actionDeleteSizer.Add( self.btnDelete, 0, wx.ALL|wx.EXPAND, 5 )
+
+
+		uploadSizer.Add( actionDeleteSizer, 0, wx.RIGHT|wx.LEFT|wx.EXPAND, 5 )
+
+		self.resultBox = wx.richtext.RichTextCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_AUTO_URL|wx.TE_READONLY|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
+		self.resultBox.SetMinSize( wx.Size( -1,160 ) )
+
+		uploadSizer.Add( self.resultBox, 0, wx.ALL|wx.EXPAND, 10 )
+
+		bSizer9 = wx.BoxSizer( wx.VERTICAL )
+
+		self.btnClearLog = wx.Button( self.mainPanel, wx.ID_ANY, u"Clear Log", wx.DefaultPosition, wx.DefaultSize, 0 )
+
+		self.btnClearLog.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_MISSING_IMAGE, wx.ART_BUTTON ) )
+		bSizer9.Add( self.btnClearLog, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+
+
+		uploadSizer.Add( bSizer9, 0, wx.ALIGN_RIGHT, 5 )
 
 
 		self.mainPanel.SetSizer( uploadSizer )
 		self.mainPanel.Layout()
 		uploadSizer.Fit( self.mainPanel )
-		mainSizer.Add( self.mainPanel, 1, wx.EXPAND |wx.ALL, 5 )
+		mainSizer.Add( self.mainPanel, 0, wx.ALL|wx.EXPAND, 5 )
 
 
 		self.SetSizer( mainSizer )
@@ -117,6 +153,8 @@ class MainFrame ( wx.Frame ):
 		self.optionSliderDays.Bind( wx.EVT_SCROLL_CHANGED, self.updateOptions )
 		self.filePicker.Bind( wx.EVT_FILEPICKER_CHANGED, self.fileChangeHandler )
 		self.btnUpload.Bind( wx.EVT_BUTTON, self.handleBtnUpload )
+		self.btnDelete.Bind( wx.EVT_BUTTON, self.handleBtnDelete )
+		self.btnClearLog.Bind( wx.EVT_BUTTON, self.handleBtnClearLog )
 
 	def __del__( self ):
 		pass
@@ -130,6 +168,12 @@ class MainFrame ( wx.Frame ):
 		event.Skip()
 
 	def handleBtnUpload( self, event ):
+		event.Skip()
+
+	def handleBtnDelete( self, event ):
+		event.Skip()
+
+	def handleBtnClearLog( self, event ):
 		event.Skip()
 
 

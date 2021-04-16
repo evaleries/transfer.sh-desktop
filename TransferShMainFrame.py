@@ -4,6 +4,10 @@ import requests
 import os
 import wx
 import transfersh
+import wx.lib.newevent
+from threads import UploadThread, DeleteThread
+
+ItemActivated, EVT_ITEM_ACTIVATED = wx.lib.newevent.NewEvent()
 
 # Implementing MainFrame
 class TransferShMainFrame( transfersh.MainFrame ):
@@ -13,55 +17,61 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.options = {
 			'Max-Days': '14'
 		}
-		self.isBusy = True
 		self.idle()
 		self.logOutput('Output Log:')
 		self.logOutput('Start upload your files to transfer.sh')
 		self.setAppIcon()
-
+		self.Bind(EVT_ITEM_ACTIVATED, self.eventListener)
 
 	def setAppIcon(self):
 		icon = wx.Icon()
 		icon.CopyFromBitmap(wx.Bitmap('res/icon.ico', wx.BITMAP_TYPE_ANY))
 		self.SetIcon(icon)
 
-
-	def handleBtnUpload(self, event):
-		if (self.isBusy):
-			event.Skip()
-		fileDir = self.filePicker.GetPath().strip()
-		if (fileDir == ''):
-			self.logOutput('File masih kosong!').idle()
-		elif not os.path.exists(fileDir):
-			self.logOutput('File yang diberikan tidak ditemukan pada sistem.').idle()
-
-		self.updateOptions()
-		self.doUploadFile()
+	def eventListener(self, event):
+		if isinstance(event.thread, UploadThread):
+			return self.handleEventUpload(event) 
+		elif isinstance(event.thread, DeleteThread):
+			return self.handleEventDelete(event)
 
 	def updateOptions(self, event=None):
 		self.options['Max-Days'] = str(self.optionSliderDays.GetValue())
 		if (isinstance(self.optionMaxDownload.GetValue(), int)) and self.optionMaxDownload.GetValue() > 0:
 			self.options['Max-Downloads'] = str(self.optionMaxDownload.GetValue())
 
-	def doUploadFile(self):
-		
-		filepath = self.filePicker.GetPath()
-		self.statusBar.SetStatusText(f'Uploading {filepath} ...')
-		self.btnUpload.Disable()
-		self.filePicker.Disable()
-		self.isBusy = True
+	def handleBtnUpload(self, event):
 
+		fileDir = self.filePicker.GetPath().strip()
+		fileName = os.path.basename(fileDir)
+		if fileDir == '':
+			return self.logOutput("File can't be empty!").idle()
+		elif not os.path.exists(fileDir):
+			return self.logOutput("The selected file doesn't exists on the system.").idle()
+
+		self.statusBar.SetStatusText(f'Uploading {fileDir} ...')
+
+		self.updateOptions()
+		workerThread = UploadThread(ItemActivated=ItemActivated, frame=self, serverUrl=self.serverUrl, filePath=fileDir, options=self.options, fileName=fileName)
+		workerThread.daemon = True
+		workerThread.start()
+		self.logOutput(f'Upload Processed with Thread ID {workerThread.ident}')
+
+	def handleEventUpload(self, event):
 		try:
-			filename = os.path.basename(filepath)
-			response = requests.put(f'{self.serverUrl}/{filename}', files={'file': open(filepath, 'rb')}, headers=self.options)
-			if response.ok:
-				self.logOutput('=============[Upload Done]=============')
-				self.logOutput(f'File Dir: {filepath}')
-				self.logOutput(f'File Size: {self.human_readable_size(os.path.getsize(filepath))}')
-				self.logOutput(f'Download Url: {response.text}')
-				# self.logOutput(f'Delete Url: {response.headers["X-Url-Delete"]}')
-			else:
-				self.logOutput(f'Upload failed: {response.text}, Response Code: {response.status_code}')
+			response, exception, filepath = event.data
+
+			if isinstance(response, requests.Response):
+				if response.ok:
+					self.logOutput(f'=============[Upload Done - {event.thread.ident}]=============')
+					self.logOutput(f'File Path: {filepath}')
+					if os.path.exists(filepath): self.logOutput(f'File Size: {self.human_readable_size(os.path.getsize(filepath))}')
+					self.logOutput(f'Url Download: {response.text}')
+					self.logOutput(f'Url Delete: {response.headers["X-Url-Delete"]}')
+				else:
+					self.logOutput(f'Upload failed: {response.text}, Response Code: {response.status_code}')
+
+			if exception:
+				raise Exception(exception)
 
 		except Exception as err:
 			self.logOutput(f'Error occured: {err}')
@@ -70,15 +80,59 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			self.filePicker.SetPath('')
 			self.idle()
 
+	def handleBtnDelete(self, event):
+		deleteUrl = self.deleteUrl.GetValue().strip()
+		if deleteUrl == '':
+			return event.Skip()
+
+		r = wx.MessageDialog(
+					None,
+					('This file will be deleted. Are you sure?'),
+					('Delete Confirmation'),
+					wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
+				).ShowModal()
+
+		if r != wx.ID_YES:
+			return
+
+		self.statusBar.SetStatusText(f'Deleting file from {deleteUrl} ...')
+
+		workerThread = DeleteThread(ItemActivated=ItemActivated, frame=self, deleteUrl=deleteUrl)
+		workerThread.daemon = True
+		workerThread.start()
+		self.logOutput(f'Delete Processed with Thread ID {workerThread.ident}')
+
+	def handleEventDelete(self, event):
+		try:
+			response, exception, deleteUrl = event.data
+
+			if isinstance(response, requests.Response):
+				if response.ok:
+					self.logOutput(f'=============[Delete Done - {event.thread.ident}]=============')
+					self.logOutput(f'File successfully deleted, URL: {deleteUrl}.')
+					self.deleteUrl.SetValue('')
+				else:
+					self.logOutput(f'Delete failed: {response.text}, Response Code: {response.status_code}')
+
+			if exception:
+				raise Exception(exception)
+
+		except Exception as err:
+			self.logOutput(f'Error occured: {err}')
+
+		finally:
+			self.idle()
+
+	def handleBtnClearLog(self, event):
+		self.resultBox.SetValue('')
+
 	def idle(self):
-		self.btnUpload.Enable()
-		self.filePicker.Enable()
 		self.statusBar.SetStatusText('Idle')
-		self.isBusy = False
 
 	def logOutput(self, text):
 		lastVal = self.resultBox.GetValue() + "\n" if self.resultBox.GetValue().strip() != '' else ''
-		self.resultBox.SetValue(lastVal + text);
+		self.resultBox.SetValue(lastVal + text)
+		self.resultBox.ShowPosition(self.resultBox.GetLastPosition())
 		return self
 
 	def fileChangeHandler( self, event ):
