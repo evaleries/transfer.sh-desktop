@@ -101,13 +101,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		if deleteUrl == '':
 			return event.Skip()
 
-		r = wx.MessageDialog(
-					None,
-					('This file will be deleted. Are you sure?'),
-					('Delete Confirmation'),
-					wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION
-				).ShowModal()
-
+		r = wx.MessageDialog(None, 'This file will be deleted. Are you sure?', 'Delete Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION).ShowModal()
 		if r != wx.ID_YES:
 			return
 
