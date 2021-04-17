@@ -76,7 +76,7 @@ class MainFrame ( wx.Frame ):
 
 		actionUploadSizer.Add( self.labelChooseFile, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.filePicker = wx.FilePickerCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, u"Pilih file", u"*.*", wx.DefaultPosition, wx.Size( 150,-1 ), wx.FLP_FILE_MUST_EXIST )
+		self.filePicker = wx.FilePickerCtrl( self.mainPanel, wx.ID_ANY, wx.EmptyString, u"Choose file to upload", u"*.*", wx.DefaultPosition, wx.Size( 150,-1 ), wx.FLP_FILE_MUST_EXIST )
 		self.filePicker.SetHelpText( u"Browse your file" )
 
 		actionUploadSizer.Add( self.filePicker, 0, wx.ALL|wx.EXPAND, 5 )
