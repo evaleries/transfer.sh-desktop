@@ -2,7 +2,20 @@ import wx
 import requests
 import threading
 
-class UploadThread(threading.Thread):
+class StoppableThread(threading.Thread):
+
+    def __init__(self,  *args, **kwargs):
+        super(StoppableThread, self).__init__(*args, **kwargs)
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+
+class UploadThread(StoppableThread):
 
     def __init__(self, requestsEvent, frame, serverUrl, filePath, options, fileName):
         threading.Thread.__init__(self)
@@ -26,7 +39,7 @@ class UploadThread(threading.Thread):
         wx.PostEvent(self.frame, self.requestsEvent(data=(response, exception, self.filePath), thread=threading.current_thread()))
 
 
-class DeleteThread(threading.Thread):
+class DeleteThread(StoppableThread):
 
     def __init__(self, requestsEvent, frame, deleteUrl):
         threading.Thread.__init__(self)
