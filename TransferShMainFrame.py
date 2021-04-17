@@ -16,6 +16,8 @@ class TransferShMainFrame( transfersh.MainFrame ):
 	def __init__( self, parent ):
 		transfersh.MainFrame.__init__( self, parent )
 		self.__version = '1.0'
+		self.__githubRepo = 'https://github.com/evaleries/transfer.sh-desktop'
+
 		self.serverUrl = 'http://transfer.sh'
 		self.options = {
 			'Max-Days': '14'
@@ -187,8 +189,8 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def handleMenuItemAbout(self, event):
 		import webbrowser
-		webbrowser.open_new_tab('https://github.com/evaleries/transfer.sh-desktop')
+		webbrowser.open_new_tab(self.__githubRepo)
 
 	def handleMenuItemReportProblems(self, event):
 		import webbrowser
-		webbrowser.open_new_tab('https://github.com/evaleries/transfer.sh-desktop/issues/new/choose')
+		webbrowser.open_new_tab(f'{self.__githubRepo}/issues/new/choose')
