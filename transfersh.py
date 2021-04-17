@@ -18,7 +18,7 @@ import wx.richtext
 class MainFrame ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Transfer.sh", pos = wx.DefaultPosition, size = wx.Size( 432,490 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Transfer.sh", pos = wx.DefaultPosition, size = wx.Size( 432,518 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
@@ -143,6 +143,38 @@ class MainFrame ( wx.Frame ):
 
 		self.SetSizer( mainSizer )
 		self.Layout()
+		self.menuBar = wx.MenuBar( 0 )
+		self.menuFile = wx.Menu()
+		self.menuItemOpen = wx.MenuItem( self.menuFile, wx.ID_ANY, u"Open..."+ u"\t" + u"Ctrl+O", u"Open to upload file", wx.ITEM_NORMAL )
+		self.menuFile.Append( self.menuItemOpen )
+
+		self.menuFile.AppendSeparator()
+
+		self.menuItemExit = wx.MenuItem( self.menuFile, wx.ID_ANY, u"Exit"+ u"\t" + u"Alt+F4", u"Quit the program", wx.ITEM_NORMAL )
+		self.menuFile.Append( self.menuItemExit )
+
+		self.menuBar.Append( self.menuFile, u"&File" )
+
+		self.menuTools = wx.Menu()
+		self.menuItemCancelAllUploads = wx.MenuItem( self.menuTools, wx.ID_ANY, u"Cancel All Uploads", u"Cancel all uploads threads", wx.ITEM_NORMAL )
+		self.menuTools.Append( self.menuItemCancelAllUploads )
+
+		self.menuItemClearLog = wx.MenuItem( self.menuTools, wx.ID_ANY, u"Clear Log", u"Clear the result log", wx.ITEM_NORMAL )
+		self.menuTools.Append( self.menuItemClearLog )
+
+		self.menuBar.Append( self.menuTools, u"&Process" )
+
+		self.menuHelp = wx.Menu()
+		self.menuItemAbout = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"About", u"About transfer.sh", wx.ITEM_NORMAL )
+		self.menuHelp.Append( self.menuItemAbout )
+
+		self.menuItemReportProblems = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"Report Problems", u"Create a new issue on repository.", wx.ITEM_NORMAL )
+		self.menuHelp.Append( self.menuItemReportProblems )
+
+		self.menuBar.Append( self.menuHelp, u"&Help" )
+
+		self.SetMenuBar( self.menuBar )
+
 		self.statusBar = self.CreateStatusBar( 1, wx.STB_DEFAULT_STYLE|wx.STB_SHOW_TIPS|wx.STB_SIZEGRIP, wx.ID_ANY )
 		self.statusBar.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
 
@@ -155,6 +187,12 @@ class MainFrame ( wx.Frame ):
 		self.btnUpload.Bind( wx.EVT_BUTTON, self.handleBtnUpload )
 		self.btnDelete.Bind( wx.EVT_BUTTON, self.handleBtnDelete )
 		self.btnClearLog.Bind( wx.EVT_BUTTON, self.handleBtnClearLog )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemOpen, id = self.menuItemOpen.GetId() )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemExit, id = self.menuItemExit.GetId() )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemCancelAllUploads, id = self.menuItemCancelAllUploads.GetId() )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemClearLog, id = self.menuItemClearLog.GetId() )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemAbout, id = self.menuItemAbout.GetId() )
+		self.Bind( wx.EVT_MENU, self.handleMenuItemReportProblems, id = self.menuItemReportProblems.GetId() )
 
 	def __del__( self ):
 		pass
@@ -174,6 +212,24 @@ class MainFrame ( wx.Frame ):
 		event.Skip()
 
 	def handleBtnClearLog( self, event ):
+		event.Skip()
+
+	def handleMenuItemOpen( self, event ):
+		event.Skip()
+
+	def handleMenuItemExit( self, event ):
+		event.Skip()
+
+	def handleMenuItemCancelAllUploads( self, event ):
+		event.Skip()
+
+	def handleMenuItemClearLog( self, event ):
+		event.Skip()
+
+	def handleMenuItemAbout( self, event ):
+		event.Skip()
+
+	def handleMenuItemReportProblems( self, event ):
 		event.Skip()
 
 
