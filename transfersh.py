@@ -31,7 +31,7 @@ class MainFrame ( wx.Frame ):
 		uploadSizer = wx.BoxSizer( wx.VERTICAL )
 
 		uploadSizer.SetMinSize( wx.Size( 1,-1 ) )
-		self.topLabel = wx.StaticText( self.mainPanel, wx.ID_ANY, u"Transfer.sh - Transfer your files to the cloud", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.topLabel = wx.StaticText( self.mainPanel, wx.ID_ANY, u"Transfer.sh - Transfer your files to the cloud", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
 		self.topLabel.Wrap( -1 )
 
 		self.topLabel.SetFont( wx.Font( 11, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, wx.EmptyString ) )
@@ -51,7 +51,7 @@ class MainFrame ( wx.Frame ):
 		optionDurationSizer.Add( self.optionSliderDays, 1, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
 
-		uploadSizer.Add( optionDurationSizer, 0, wx.EXPAND|wx.ALL, 5 )
+		uploadSizer.Add( optionDurationSizer, 0, wx.ALL|wx.EXPAND, 5 )
 
 		optionDownloadSizer = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -81,7 +81,7 @@ class MainFrame ( wx.Frame ):
 
 		actionUploadSizer.Add( self.filePicker, 0, wx.ALL|wx.EXPAND, 5 )
 
-		self.btnUpload = wx.Button( self.mainPanel, wx.ID_ANY, u"UPLOAD", wx.DefaultPosition, wx.DefaultSize, wx.BU_LEFT|wx.BU_NOTEXT )
+		self.btnUpload = wx.Button( self.mainPanel, wx.ID_ANY, u"UPLOAD", wx.DefaultPosition, wx.DefaultSize, wx.BU_NOTEXT )
 
 		self.btnUpload.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_GO_UP, wx.ART_TOOLBAR ) )
 		self.btnUpload.SetBitmapMargins( wx.Size( 15,1 ) )
