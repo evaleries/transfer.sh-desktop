@@ -17,5 +17,5 @@ class DragnDrop(wx.FileDropTarget):
 
     def __confirm(self, totalFiles):
         word = f'These {totalFiles} files' if totalFiles > 1 else 'This file'
-        r = wx.MessageDialog(None, f'{word} will be uploaded? Are you sure?','Upload Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+        r = wx.MessageDialog(None, f'{word} will be uploaded? Are you sure?', 'Upload Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
         return r == wx.ID_YES
