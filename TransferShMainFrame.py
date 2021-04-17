@@ -15,6 +15,7 @@ RequestsEvent, EVT_REQUESTS = wx.lib.newevent.NewEvent()
 class TransferShMainFrame( transfersh.MainFrame ):
 	def __init__( self, parent ):
 		transfersh.MainFrame.__init__( self, parent )
+		self.__version = '1.0'
 		self.serverUrl = 'http://transfer.sh'
 		self.options = {
 			'Max-Days': '14'
@@ -26,6 +27,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.setAppIcon()
 		self.setupDragnDrop()
 		self.Bind(EVT_REQUESTS, self.eventListener)
+		self.menuItemVersion.SetItemLabel(f'Version: {self.__version}')
 
 	def setAppIcon(self):
 		if not os.path.exists(Utils.resource_path('res/icon.ico')):

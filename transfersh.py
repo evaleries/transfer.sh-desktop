@@ -171,6 +171,9 @@ class MainFrame ( wx.Frame ):
 		self.menuItemReportProblems = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"Report Problems", u"Create a new issue on repository.", wx.ITEM_NORMAL )
 		self.menuHelp.Append( self.menuItemReportProblems )
 
+		self.menuItemVersion = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"Desktop Client Version", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuHelp.Append( self.menuItemVersion )
+
 		self.menuBar.Append( self.menuHelp, u"&Help" )
 
 		self.SetMenuBar( self.menuBar )
