@@ -7,6 +7,7 @@ import transfersh
 import wx.lib.newevent
 from dragndrop import DragnDrop
 from threads import UploadThread, DeleteThread
+from utils import Utils
 
 RequestsEvent, EVT_REQUESTS = wx.lib.newevent.NewEvent()
 
@@ -26,8 +27,10 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.Bind(EVT_REQUESTS, self.eventListener)
 
 	def setAppIcon(self):
+		if not os.path.exists(Utils.resource_path('res/icon.ico')):
+			return
 		icon = wx.Icon()
-		icon.CopyFromBitmap(wx.Bitmap('res/icon.ico', wx.BITMAP_TYPE_ANY))
+		icon.CopyFromBitmap(wx.Bitmap(Utils.resource_path('res/icon.ico'), wx.BITMAP_TYPE_ANY))
 		self.SetIcon(icon)
 
 	def setupDragnDrop(self):
@@ -80,7 +83,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 				if response.ok:
 					self.logOutput(f'=============[Upload Done - {event.thread.ident}]=============')
 					self.logOutput(f'File Path: {filePath}')
-					if os.path.exists(filePath): self.logOutput(f'File Size: {self.human_readable_size(os.path.getsize(filePath))}')
+					if os.path.exists(filePath): self.logOutput(f'File Size: {Utils.human_readable_size(os.path.getsize(filePath))}')
 					self.logOutput(f'Url Download: {response.text}')
 					self.logOutput(f'Url Delete: {response.headers["X-Url-Delete"]}')
 				else:
@@ -141,12 +144,4 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		return self
 
 	def fileChangeHandler( self, event ):
-		self.statusBar.SetStatusText(f'Selected file: {os.path.basename(self.filePicker.GetPath())} ({self.human_readable_size(os.path.getsize(self.filePicker.GetPath()))})')
-
-	def human_readable_size(self, num, decimal_places=2):
-		for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
-			if abs(num) < 1024.0:
-				return "%3.1f %sB" % (num, unit)
-			num /= 1024.0
-		return "%.1f %sB" % (num, 'Yi')
-
+		self.statusBar.SetStatusText(f'Selected file: {os.path.basename(self.filePicker.GetPath())} ({Utils.human_readable_size(os.path.getsize(self.filePicker.GetPath()))})')
