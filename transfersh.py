@@ -143,7 +143,7 @@ class MainFrame ( wx.Frame ):
 
 		self.SetSizer( mainSizer )
 		self.Layout()
-		self.statusBar = self.CreateStatusBar( 1, wx.STB_DEFAULT_STYLE|wx.STB_ELLIPSIZE_START|wx.STB_SHOW_TIPS|wx.STB_SIZEGRIP, wx.ID_ANY )
+		self.statusBar = self.CreateStatusBar( 1, wx.STB_DEFAULT_STYLE|wx.STB_SHOW_TIPS|wx.STB_SIZEGRIP, wx.ID_ANY )
 		self.statusBar.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVECAPTION ) )
 
 
