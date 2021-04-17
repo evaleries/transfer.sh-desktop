@@ -161,7 +161,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def handleMenuItemExit(self, event):
 		if len(self.jobs) > 0:
-			r = wx.MessageDialog(None, 'You have upload in progress. Do you want to exit? ', 'Exit Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+			r = wx.MessageDialog(None, 'You have upload in progress. Do you want to exit? This may cause an error', 'Exit Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
 			if r != wx.ID_YES:
 				return
 
@@ -172,7 +172,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def handleMenuItemCancelAllUploads(self, event):
 		if len(self.jobs) > 0:
-			r = wx.MessageDialog(None, 'Are you sure want to cancel all uploads? ', 'Cancel All Uploads Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+			r = wx.MessageDialog(None, 'Are you sure want to cancel all uploads? This may cause an error', 'Cancel All Uploads Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
 			if r != wx.ID_YES:
 				return
 
