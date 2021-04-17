@@ -5,6 +5,7 @@ import os
 import wx
 import transfersh
 import wx.lib.newevent
+from dragndrop import DragnDrop
 from threads import UploadThread, DeleteThread
 
 RequestsEvent, EVT_REQUESTS = wx.lib.newevent.NewEvent()
@@ -21,12 +22,17 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.logOutput('Output Log:')
 		self.logOutput('Start upload your files to transfer.sh')
 		self.setAppIcon()
+		self.setupDragnDrop()
 		self.Bind(EVT_REQUESTS, self.eventListener)
 
 	def setAppIcon(self):
 		icon = wx.Icon()
 		icon.CopyFromBitmap(wx.Bitmap('res/icon.ico', wx.BITMAP_TYPE_ANY))
 		self.SetIcon(icon)
+
+	def setupDragnDrop(self):
+		dragndrop = DragnDrop(self)
+		self.SetDropTarget(dragndrop)
 
 	def eventListener(self, event):
 		if isinstance(event.thread, UploadThread):
