@@ -40,7 +40,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def eventListener(self, event):
 		if isinstance(event.thread, UploadThread):
-			return self.handleEventUpload(event) 
+			return self.handleEventUpload(event)
 		elif isinstance(event.thread, DeleteThread):
 			return self.handleEventDelete(event)
 
@@ -167,7 +167,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 			for job in self.jobs:
 				if job.is_alive(): job.stop()
-		
+
 		wx.Exit()
 
 	def handleMenuItemCancelAllUploads(self, event):
