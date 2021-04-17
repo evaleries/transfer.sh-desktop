@@ -19,6 +19,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.options = {
 			'Max-Days': '14'
 		}
+		self.jobs = []
 		self.idle()
 		self.logOutput('Output Log:')
 		self.logOutput('Start upload your files to transfer.sh')
@@ -53,6 +54,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		workerThread.start()
 		self.statusBar.SetStatusText(f'Uploading {filePath} ...')
 		self.logOutput(f'Upload Processed with Thread ID {workerThread.ident}')
+		self.jobs.append(workerThread)
 
 		return workerThread
 
@@ -61,6 +63,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		workerThread.start()
 		self.statusBar.SetStatusText(f'Deleting file from {deleteUrl} ...')
 		self.logOutput(f'Delete Processed with Thread ID {workerThread.ident}')
+		self.jobs.append(workerThread)
 
 		return workerThread
 
@@ -87,7 +90,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 					self.logOutput(f'Url Download: {response.text}')
 					self.logOutput(f'Url Delete: {response.headers["X-Url-Delete"]}')
 				else:
-					self.logOutput(f'Upload failed: {response.text}, Response Code: {response.status_code}')
+					self.logOutput(f'Upload failed, got {response.status_code} response code')
 
 			if exception:
 				raise Exception(exception)
@@ -96,6 +99,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			self.logOutput(f'Error occured: {err}')
 
 		finally:
+			self.jobs.remove(event.thread)
 			self.filePicker.SetPath('')
 			self.idle()
 
@@ -129,6 +133,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			self.logOutput(f'Error occured: {err}')
 
 		finally:
+			self.jobs.remove(event.thread)
 			self.idle()
 
 	def handleBtnClearLog(self, event):
@@ -145,3 +150,43 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def fileChangeHandler( self, event ):
 		self.statusBar.SetStatusText(f'Selected file: {os.path.basename(self.filePicker.GetPath())} ({Utils.human_readable_size(os.path.getsize(self.filePicker.GetPath()))})')
+
+	def handleMenuItemOpen(self, event):
+		dlg = wx.FileDialog(parent=self, message='Select file(s) to upload', style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+		if dlg.ShowModal() == wx.ID_CANCEL:
+			return
+
+		self.filePicker.SetPath(dlg.GetPath())
+		self.fileChangeHandler(event)
+
+	def handleMenuItemExit(self, event):
+		if len(self.jobs) > 0:
+			r = wx.MessageDialog(None, 'You have upload in progress. Do you want to exit? ', 'Exit Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+			if r != wx.ID_YES:
+				return
+
+			for job in self.jobs:
+				if job.is_alive(): job.stop()
+		
+		wx.Exit()
+
+	def handleMenuItemCancelAllUploads(self, event):
+		if len(self.jobs) > 0:
+			r = wx.MessageDialog(None, 'Are you sure want to cancel all uploads? ', 'Cancel All Uploads Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+			if r != wx.ID_YES:
+				return
+
+			for job in self.jobs:
+				if job.is_alive(): job.stop()
+			self.logOutput('All uploads progress were cancelled')
+
+	def handleMenuItemClearLog(self, event):
+		self.handleBtnClearLog(event)
+
+	def handleMenuItemAbout(self, event):
+		import webbrowser
+		webbrowser.open_new_tab('https://github.com/evaleries/transfer.sh-desktop')
+
+	def handleMenuItemReportProblems(self, event):
+		import webbrowser
+		webbrowser.open_new_tab('https://github.com/evaleries/transfer.sh-desktop/issues/new/choose')
