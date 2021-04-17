@@ -7,7 +7,7 @@ class DragnDrop(wx.FileDropTarget):
         self.target = target
 
     def OnDropFiles(self, x, y, files):
-        if not self.__confirm():
+        if not self.__confirm(len(files)):
             return False
 
         for file in files:
@@ -15,6 +15,7 @@ class DragnDrop(wx.FileDropTarget):
 
         return True
 
-    def __confirm(self):
-        r = wx.MessageDialog(None, 'These files will be uploaded? Are you sure?','Upload Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+    def __confirm(self, totalFiles):
+        word = f'These {totalFiles} files' if totalFiles > 1 else 'This file'
+        r = wx.MessageDialog(None, f'{word} will be uploaded? Are you sure?','Upload Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
         return r == wx.ID_YES
