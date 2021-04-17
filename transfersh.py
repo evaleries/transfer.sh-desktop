@@ -165,7 +165,7 @@ class MainFrame ( wx.Frame ):
 		self.menuBar.Append( self.menuTools, u"&Process" )
 
 		self.menuHelp = wx.Menu()
-		self.menuItemAbout = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"About", u"About transfer.sh", wx.ITEM_NORMAL )
+		self.menuItemAbout = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"About", u"About transfer.sh desktop client", wx.ITEM_NORMAL )
 		self.menuHelp.Append( self.menuItemAbout )
 
 		self.menuItemReportProblems = wx.MenuItem( self.menuHelp, wx.ID_ANY, u"Report Problems", u"Create a new issue on repository.", wx.ITEM_NORMAL )
