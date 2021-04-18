@@ -9,5 +9,5 @@ class MainApp(wx.App):
         return True
 
 if __name__ == '__main__':
-    app = MainApp(0)
+    app = MainApp()
     app.MainLoop()
