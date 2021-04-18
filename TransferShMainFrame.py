@@ -68,6 +68,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.statusBar.SetStatusText(f'Uploading {filePath} ...')
 		self.logOutput(f'Upload Processed with Thread ID {workerThread.ident}')
 		self.jobs.append(workerThread)
+		self.filePicker.SetPath('')
 
 		return workerThread
 
