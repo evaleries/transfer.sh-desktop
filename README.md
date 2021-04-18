@@ -10,3 +10,5 @@ A Desktop client for [transfer.sh](https://github.com/dutchcoders/transfer.sh), 
 - Delete uploaded files
 - Uses thread system.
 - Drag and drop to upload files.
+- Cancel all ongoing uploads
+- Shortcuts
