@@ -26,6 +26,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.logOutput('Start upload your files to transfer.sh')
 		self.setAppIcon()
 		self.setupDragnDrop()
+		self.setupShortcuts()
 		self.Bind(EVT_REQUESTS, self.eventListener)
 		self.menuItemVersion.SetItemLabel(f'Version: {self.__version}')
 
@@ -39,6 +40,16 @@ class TransferShMainFrame( transfersh.MainFrame ):
 	def setupDragnDrop(self):
 		dragndrop = DragnDrop(self)
 		self.SetDropTarget(dragndrop)
+
+	def setupShortcuts(self):
+		self.SetAcceleratorTable(wx.AcceleratorTable([
+			(wx.ACCEL_ALT, wx.WXK_F4, self.menuItemExit.GetId()),
+			(wx.ACCEL_CTRL, wx.WXK_CONTROL_O, self.menuItemOpen.GetId()),
+			(wx.ACCEL_SHIFT, wx.WXK_CONTROL_X, self.menuItemCancelAllUploads.GetId()),
+			(wx.ACCEL_CTRL, wx.WXK_CONTROL_L, self.menuItemClearLog.GetId()),
+			(wx.ACCEL_CTRL, wx.WXK_CONTROL_U, self.menuItemUpload.GetId()),
+			(wx.ACCEL_CTRL, wx.WXK_CONTROL_D, self.menuItemDelete.GetId()),
+			]))
 
 	def eventListener(self, event):
 		if isinstance(event.thread, UploadThread):
@@ -111,8 +122,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			return event.Skip()
 
 		r = wx.MessageDialog(None, 'This file will be deleted. Are you sure?', 'Delete Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION).ShowModal()
-		if r != wx.ID_YES:
-			return
+		if r != wx.ID_YES: return
 
 		self.doDelete(deleteUrl)
 
@@ -155,8 +165,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 
 	def handleMenuItemOpen(self, event):
 		dlg = wx.FileDialog(parent=self, message='Select file(s) to upload', style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
-		if dlg.ShowModal() == wx.ID_CANCEL:
-			return
+		if dlg.ShowModal() == wx.ID_CANCEL: return
 
 		self.filePicker.SetPath(dlg.GetPath())
 		self.fileChangeHandler(event)
@@ -190,6 +199,13 @@ class TransferShMainFrame( transfersh.MainFrame ):
 	def handleMenuItemReportProblems(self, event):
 		import webbrowser
 		webbrowser.open_new_tab(f'{self.__githubRepo}/issues/new/choose')
+
+	def handleMenuItemUpload(self, event):
+		self.handleBtnUpload(event)
+
+	def handleMenuItemDelete(self, event):
+		self.handleBtnDelete(event)
+
 	def __killAllJobs(self):
 		for job in self.jobs:
 			if job.is_alive():
