@@ -1,4 +1,5 @@
 import wx
+import ctypes
 import requests
 import threading
 
@@ -6,19 +7,28 @@ class StoppableThread(threading.Thread):
 
     def __init__(self,  *args, **kwargs):
         super(StoppableThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
 
     def stop(self):
-        self._stop_event.set()
+        self.raise_exception()
 
-    def stopped(self):
-        return self._stop_event.is_set()
+    def get_id(self):
+        if hasattr(self, '_thread_id'):
+            return self._thread_id
+        for id, thread in threading._active.items():
+            if thread is self:
+                return id
+
+    def raise_exception(self):
+        thread_id = self.get_id()
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, ctypes.py_object(SystemExit))
+        if res > 1:
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
 
 
 class UploadThread(StoppableThread):
 
     def __init__(self, requestsEvent, frame, serverUrl, filePath, options, fileName):
-        threading.Thread.__init__(self)
+        super(UploadThread, self).__init__()
         self.serverUrl = serverUrl
         self.filePath = filePath
         self.fileName = fileName
@@ -42,7 +52,7 @@ class UploadThread(StoppableThread):
 class DeleteThread(StoppableThread):
 
     def __init__(self, requestsEvent, frame, deleteUrl):
-        threading.Thread.__init__(self)
+        super(DeleteThread, self).__init__()
         self.deleteUrl = deleteUrl
         self.frame = frame
         self.requestsEvent = requestsEvent

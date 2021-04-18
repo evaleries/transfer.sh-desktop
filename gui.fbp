@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">MainFrame</property>
             <property name="pos"></property>
-            <property name="size">432,518</property>
+            <property name="size">432,574</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title">Transfer.sh</property>
@@ -1085,8 +1085,40 @@
                 </object>
                 <object class="wxMenu" expanded="1">
                     <property name="label">&amp;Process</property>
-                    <property name="name">menuTools</property>
+                    <property name="name">menuProcess</property>
                     <property name="permission">protected</property>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help">Upload selected file</property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Upload</property>
+                        <property name="name">menuItemUpload</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">CTRL+U</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">handleMenuItemUpload</event>
+                    </object>
+                    <object class="wxMenuItem" expanded="1">
+                        <property name="bitmap"></property>
+                        <property name="checked">0</property>
+                        <property name="enabled">1</property>
+                        <property name="help">Delete file from a given url in textbox</property>
+                        <property name="id">wxID_ANY</property>
+                        <property name="kind">wxITEM_NORMAL</property>
+                        <property name="label">Delete</property>
+                        <property name="name">menuItemDelete</property>
+                        <property name="permission">none</property>
+                        <property name="shortcut">CTRL+D</property>
+                        <property name="unchecked_bitmap"></property>
+                        <event name="OnMenuSelection">handleMenuItemDelete</event>
+                    </object>
+                    <object class="separator" expanded="1">
+                        <property name="name">m_separator2</property>
+                        <property name="permission">none</property>
+                    </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
@@ -1097,9 +1129,13 @@
                         <property name="label">Cancel All Uploads</property>
                         <property name="name">menuItemCancelAllUploads</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">CTRL+SHIFT+X</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">handleMenuItemCancelAllUploads</event>
+                    </object>
+                    <object class="separator" expanded="1">
+                        <property name="name">m_separator3</property>
+                        <property name="permission">none</property>
                     </object>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
@@ -1111,7 +1147,7 @@
                         <property name="label">Clear Log</property>
                         <property name="name">menuItemClearLog</property>
                         <property name="permission">none</property>
-                        <property name="shortcut"></property>
+                        <property name="shortcut">CTRL+L</property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">handleMenuItemClearLog</event>
                     </object>
