@@ -33,7 +33,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		if not os.path.exists(Utils.resource_path('res/icon.ico')):
 			return
 		icon = wx.Icon()
-		icon.CopyFromBitmap(wx.Bitmap(Utils.resource_path('res/icon.ico'), wx.BITMAP_TYPE_ANY))
+		icon.CopyFromBitmap(wx.Bitmap(Utils.resource_path('res/icon.ico'), wx.BITMAP_TYPE_ICO))
 		self.SetIcon(icon)
 
 	def setupEventBindings(self):
