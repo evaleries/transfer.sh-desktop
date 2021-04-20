@@ -67,7 +67,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			self.options['Max-Downloads'] = str(self.optionMaxDownload.GetValue())
 
 	def doUpload(self, filePath):
-		workerThread = UploadThread(requestsEvent=RequestsEvent, frame=self, serverUrl=self.serverUrl, filePath=filePath, options=self.options, fileName=os.path.basename(filePath))
+		workerThread = UploadThread(requestsEvent=RequestsEvent, frame=self, serverUrl=self.serverUrl, filePath=filePath, options=self.options, fileName=Utils.normalize_filename(filePath))
 		workerThread.start()
 		self.statusBar.SetStatusText(f'Uploading {filePath} ...')
 		self.logOutput(f'Upload Processed with Thread ID {workerThread.ident}')
