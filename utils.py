@@ -19,3 +19,9 @@ class Utils:
                 return "%3.1f %sB" % (num, unit)
             num /= 1024.0
         return "%.1f %sB" % (num, 'Yi')
+
+    @staticmethod
+    def normalize_filename(filename):
+        realFileName, extension = os.path.splitext(os.path.basename(filename))
+        realFileName = realFileName.replace(' ', '_')
+        return f'{realFileName}{extension}'

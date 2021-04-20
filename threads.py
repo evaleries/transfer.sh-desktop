@@ -2,6 +2,7 @@ import wx
 import ctypes
 import requests
 import threading
+import mimetypes
 
 class StoppableThread(threading.Thread):
 
@@ -42,7 +43,11 @@ class UploadThread(StoppableThread):
         response = None
 
         try:
-            response = requests.put(f'{self.serverUrl}/{self.fileName}', files={'file': open(self.filePath, 'rb')}, headers=self.options, timeout=None)
+            mime = mimetypes.MimeTypes().guess_type(self.filePath)[0]
+            if not mime:
+                mime = 'text/plain'
+            self.options['Content-Type'] = mime
+            response = requests.put(f'{self.serverUrl}/{self.fileName}', files={'file': (self.fileName, open(self.filePath, 'rb'), mime)}, headers=self.options, timeout=None)
         except Exception as err:
             exception = err
 
