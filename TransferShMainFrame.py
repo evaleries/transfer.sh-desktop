@@ -1,5 +1,6 @@
 import os
 import wx
+import wx.adv
 import requests
 import transfersh
 import wx.lib.newevent
@@ -189,8 +190,16 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.handleBtnClearLog(event)
 
 	def handleMenuItemAbout(self, event):
-		import webbrowser
-		webbrowser.open_new_tab(self.__githubRepo)
+		info = wx.adv.AboutDialogInfo()
+		info.SetIcon(wx.Icon(Utils.resource_path('res/icon.ico'), wx.BITMAP_TYPE_ICO))
+		info.SetName('Transfer.sh Desktop Client')
+		info.SetVersion(self.__version)
+		info.SetDescription("Transfer.sh Desktop Client is a free file-sharing software. \nAllows you to upload files to transfer.sh with ease. \nYou can drag and drop files to upload multiple files\nDelete uploaded files")
+		info.SetCopyright('(C) 2021 evaleries')
+		info.SetWebSite(self.__githubRepo)
+		info.SetLicence('Transfer.sh Desktop Client is a free software;\nyou can redistribute it and/or modify it under the terms of the MIT License.')
+		info.AddDeveloper('evaleries')
+		wx.adv.AboutBox(info)
 
 	def handleMenuItemReportProblems(self, event):
 		import webbrowser
