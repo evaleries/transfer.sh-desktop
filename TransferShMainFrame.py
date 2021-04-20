@@ -22,12 +22,11 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		}
 		self.jobs = []
 		self.idle()
-		self.logOutput('Output Log:')
-		self.logOutput('Start upload your files to transfer.sh')
+		self.logOutput('Output Log: \nStart upload your files to transfer.sh')
+		self.setupEventBindings()
 		self.setAppIcon()
 		self.setupDragnDrop()
 		self.setupShortcuts()
-		self.Bind(EVT_REQUESTS, self.eventListener)
 		self.menuItemVersion.SetItemLabel(f'Version: {self.__version}')
 
 	def setAppIcon(self):
@@ -36,6 +35,10 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		icon = wx.Icon()
 		icon.CopyFromBitmap(wx.Bitmap(Utils.resource_path('res/icon.ico'), wx.BITMAP_TYPE_ANY))
 		self.SetIcon(icon)
+
+	def setupEventBindings(self):
+		self.Bind(EVT_REQUESTS, self.requestsEventListener)
+		self.Bind(wx.EVT_CLOSE, self.OnExit)
 
 	def setupDragnDrop(self):
 		dragndrop = DragnDrop(self)
@@ -51,7 +54,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			(wx.ACCEL_CTRL, wx.WXK_CONTROL_D, self.menuItemDelete.GetId()),
 			]))
 
-	def eventListener(self, event):
+	def requestsEventListener(self, event):
 		if isinstance(event.thread, UploadThread):
 			return self.handleEventUpload(event)
 		elif isinstance(event.thread, DeleteThread):
@@ -172,13 +175,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 		self.fileChangeHandler(event)
 
 	def handleMenuItemExit(self, event):
-		if len(self.jobs) > 0:
-			r = wx.MessageDialog(None, 'You have upload in progress. Do you want to exit? This may cause an error', 'Exit Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
-			if r != wx.ID_YES: return
-
-			self.__killAllJobs()
-
-		wx.Exit()
+		self.OnExit(event)
 
 	def handleMenuItemCancelAllUploads(self, event):
 		if len(self.jobs) > 0:
@@ -210,3 +207,12 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			if job.is_alive():
 				job.stop()
 				self.jobs.remove(job)
+
+	def OnExit(self, event):
+		if len(self.jobs) > 0:
+			r = wx.MessageDialog(None, 'You have upload in progress. Do you want to exit? This may cause an error', 'Exit Confirmation', wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING).ShowModal()
+			if r != wx.ID_YES: return
+
+			self.__killAllJobs()
+
+		wx.Exit()
