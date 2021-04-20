@@ -13,7 +13,7 @@ RequestsEvent, EVT_REQUESTS = wx.lib.newevent.NewEvent()
 class TransferShMainFrame( transfersh.MainFrame ):
 	def __init__( self, parent ):
 		transfersh.MainFrame.__init__( self, parent )
-		self.__version = '1.1.0'
+		self.__version = '1.1.1'
 		self.__githubRepo = 'https://github.com/evaleries/transfer.sh-desktop'
 
 		self.serverUrl = 'http://transfer.sh'
