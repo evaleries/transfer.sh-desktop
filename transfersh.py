@@ -38,35 +38,40 @@ class MainFrame ( wx.Frame ):
 
 		uploadSizer.Add( self.topLabel, 0, wx.ALL|wx.EXPAND, 5 )
 
+		optionSizer = wx.StaticBoxSizer( wx.StaticBox( self.mainPanel, wx.ID_ANY, u"Upload Options" ), wx.VERTICAL )
+
 		optionDurationSizer = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.labelMaxDays = wx.StaticText( self.mainPanel, wx.ID_ANY, u"Keep for X days (Max 14 days)", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.labelMaxDays = wx.StaticText( optionSizer.GetStaticBox(), wx.ID_ANY, u"Keep for X days (Max 14 days)", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.labelMaxDays.Wrap( -1 )
 
 		self.labelMaxDays.SetMinSize( wx.Size( 200,-1 ) )
 
 		optionDurationSizer.Add( self.labelMaxDays, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.optionSliderDays = wx.Slider( self.mainPanel, wx.ID_ANY, 14, 1, 14, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_MIN_MAX_LABELS|wx.SL_VALUE_LABEL )
+		self.optionSliderDays = wx.Slider( optionSizer.GetStaticBox(), wx.ID_ANY, 14, 1, 14, wx.DefaultPosition, wx.DefaultSize, wx.SL_HORIZONTAL|wx.SL_MIN_MAX_LABELS|wx.SL_VALUE_LABEL )
 		optionDurationSizer.Add( self.optionSliderDays, 1, wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
 
-		uploadSizer.Add( optionDurationSizer, 0, wx.ALL|wx.EXPAND, 5 )
+		optionSizer.Add( optionDurationSizer, 0, wx.ALL|wx.EXPAND, 5 )
 
 		optionDownloadSizer = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.labelMaxDays1 = wx.StaticText( self.mainPanel, wx.ID_ANY, u"Limit Downloads ( Unlimited: 0 )", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.labelMaxDays1 = wx.StaticText( optionSizer.GetStaticBox(), wx.ID_ANY, u"Limit Downloads ( Unlimited: 0 )", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.labelMaxDays1.Wrap( -1 )
 
 		self.labelMaxDays1.SetMinSize( wx.Size( 200,-1 ) )
 
 		optionDownloadSizer.Add( self.labelMaxDays1, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.optionMaxDownload = wx.TextCtrl( self.mainPanel, wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		optionDownloadSizer.Add( self.optionMaxDownload, 1, wx.ALL|wx.EXPAND, 5 )
+		self.optionMaxDownload = wx.SpinCtrl( optionSizer.GetStaticBox(), wx.ID_ANY, u"0", wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 99999999, 0 )
+		optionDownloadSizer.Add( self.optionMaxDownload, 1, wx.ALL, 5 )
 
 
-		uploadSizer.Add( optionDownloadSizer, 0, wx.EXPAND|wx.ALL, 5 )
+		optionSizer.Add( optionDownloadSizer, 0, wx.EXPAND|wx.ALL, 5 )
+
+
+		uploadSizer.Add( optionSizer, 1, wx.EXPAND, 5 )
 
 		actionUploadSizer = wx.BoxSizer( wx.HORIZONTAL )
 
@@ -124,15 +129,15 @@ class MainFrame ( wx.Frame ):
 
 		uploadSizer.Add( self.resultBox, 0, wx.ALL|wx.EXPAND, 10 )
 
-		bSizer9 = wx.BoxSizer( wx.VERTICAL )
+		bottomSizer = wx.BoxSizer( wx.VERTICAL )
 
 		self.btnClearLog = wx.Button( self.mainPanel, wx.ID_ANY, u"Clear Log", wx.DefaultPosition, wx.DefaultSize, 0 )
 
 		self.btnClearLog.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_MISSING_IMAGE, wx.ART_BUTTON ) )
-		bSizer9.Add( self.btnClearLog, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		bottomSizer.Add( self.btnClearLog, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 
-		uploadSizer.Add( bSizer9, 0, wx.ALIGN_RIGHT, 5 )
+		uploadSizer.Add( bottomSizer, 0, wx.ALIGN_RIGHT, 5 )
 
 
 		self.mainPanel.SetSizer( uploadSizer )
