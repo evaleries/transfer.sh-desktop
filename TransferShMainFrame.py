@@ -40,6 +40,7 @@ class TransferShMainFrame( transfersh.MainFrame ):
 	def setupEventBindings(self):
 		self.Bind(EVT_REQUESTS, self.requestsEventListener)
 		self.Bind(wx.EVT_CLOSE, self.OnExit)
+		self.Bind(wx.EVT_SIZING, self.OnReSize)
 
 	def setupDragnDrop(self):
 		dragndrop = DragnDrop(self)
@@ -225,3 +226,6 @@ class TransferShMainFrame( transfersh.MainFrame ):
 			self.__killAllJobs()
 
 		wx.Exit()
+
+	def OnReSize(self, event):
+		self.resultBox.SetMinSize(wx.Size(self.GetWidth() - 38, self.GetHeight() - 390))
